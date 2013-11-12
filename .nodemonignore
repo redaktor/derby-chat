@@ -1,0 +1,4 @@
+*.coffee
+public
+src
+.git

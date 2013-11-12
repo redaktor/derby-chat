@@ -1,0 +1,90 @@
+<Header:>
+  <body class="{{dash($ns)}}">
+  <ui:connectionAlert>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="/">Derby Chat</a>
+        <!--
+        <div class="nav-collapse">
+          <ul class="nav">
+            <app:navLink title="Home" href="/">
+            <app:navLink title="List" href="/list">
+          </ul>
+        </div>
+        -->
+        <div class="pull-right">
+          <input type="text" placeholder="Nickname" value="{_page.user.name}" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="container">
+
+
+<Body:>
+  <div class="row-fluid">
+    <div class="span2">
+      <div class="column">
+        <p><a x-bind="click: thread.all">All</a>
+        {#each _page.threads as :thread}
+          <p>
+            <a style="color: {:thread.color}" x-bind="click: thread.select" data-id="{{:thread.id}}">{:thread.name}</a>
+            {#if equal(:thread.id, _page.editThreadId)}
+              <input type="text" value="{:thread.name}"/>
+              <a x-bind="click: thread.save"><i class="icon-ok"></i></a>
+            {else}
+              <a x-bind="click: thread.edit" data-id="{:thread.id}"><i class="icon-edit"></i></a>
+            {/}
+          </p>
+        {/}
+      </div>
+    </div>
+    <div class="span8">
+      <h4 style="color: {color(_page.threadId)}">{thread(_page.threadId)}</h4>
+      <div id="chat" class="column">
+        {#each _page.messages as :message}
+          <p x-bind="click: thread.add">
+            <span class="span3 muted"><ui:date value={:message.date}></span>
+            <strong>{name(:message.userId)}:</strong> {:message.text}
+            {#if :message.threadId}
+              <span style="color: {color(:message.threadId)}">({thread(:message.threadId)})</span>
+            {/}
+            {#if equal(:message.id, _page.answerMessageId)}
+              <span class="label label-info">Answer!</span>
+            {/}
+
+          </p>
+        {/}
+      </div>
+      <textarea id="enter" class="input-xxlarge" x-bind="keydown: message.add">{_page.text}</textarea>
+      {#if _page.answerMessageId}
+        <a class="btn" x-bind="click: thread.reset">Reset</a>
+      {/}
+    </div>
+    <div class="span2">
+      <div class="column">
+        {#each _page.users as :user}
+          <p>{name(:user.id, :user.name)}</p>
+        {/}
+      </div>
+    </div>
+  </div>
+
+
+<Footer:>
+    </div>
+  </div>
+  <!--
+  <footer>
+    <div class="container">
+      <p>&copy; Community 2013</p>
+    </div>
+  </footer>
+  -->
+
+<navLink:>
+  <li class="{{#if equal($url, @href)}}active{{/}}">
+    <a href="{{@href}}">{{@title}}</a>
+  </li>
